@@ -49,7 +49,7 @@ char EV_HLDM_PlayTextureSound( int idx, pmtrace_t *ptr, const Vector &vecSrc, co
 	// hit the world, try to play sound based on texture material type
 	char chTextureType = CHAR_TEX_CONCRETE;
 	float fvol;
-	const char *rgsz[4];
+	const char *rgsz[6];
 	int cnt;
 	float fattn = ATTN_NORM;
 	int entity;
@@ -172,11 +172,13 @@ char EV_HLDM_PlayTextureSound( int idx, pmtrace_t *ptr, const Vector &vecSrc, co
 	case CHAR_TEX_SNOW:
 	{
 		fvol = 0.7;
-		rgsz[0] = "debris/pl_snow1.wav";
-		rgsz[1] = "debris/pl_snow2.wav";
-		rgsz[2] = "debris/pl_snow3.wav";
-		rgsz[3] = "debris/pl_snow4.wav";
-		cnt = 4;
+		rgsz[0] = "player/pl_snow1.wav";
+		rgsz[1] = "player/pl_snow2.wav";
+		rgsz[2] = "player/pl_snow3.wav";
+		rgsz[3] = "player/pl_snow4.wav";
+		rgsz[4] = "player/pl_snow5.wav";
+		rgsz[5] = "player/pl_snow6.wav";
+		cnt = 6;
 		break;
 	}
 	case CHAR_TEX_WOOD:
@@ -258,7 +260,7 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName, char chTextu
 		}
 		else
 		{
-			switch( iRand % 7)
+			switch( iRand % 6)
 			{
 			case 0:	gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric1.wav", 1.0, ATTN_NORM, 0, PITCH_NORM ); break;
 			case 1:	gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric2.wav", 1.0, ATTN_NORM, 0, PITCH_NORM ); break;
@@ -266,7 +268,6 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName, char chTextu
 			case 3:	gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric4.wav", 1.0, ATTN_NORM, 0, PITCH_NORM ); break;
 			case 4:	gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric5.wav", 1.0, ATTN_NORM, 0, PITCH_NORM ); break;
 			case 5: gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric_conc-1.wav", 1.0f, ATTN_NORM, 0, PITCH_NORM); break;
-			case 6: gEngfuncs.pEventAPI->EV_PlaySound( -1, pTrace->endpos, 0, "weapons/ric_conc-2.wav", 1.0f, ATTN_NORM, 0, PITCH_NORM); break;
 			}
 		}
 
@@ -735,7 +736,7 @@ void CreateCorpse(Vector vOrigin, Vector vAngles, const char *pModel, float flAn
 
 	if( model )
 	{
-		model->flags = (FTENT_CLIENTCUSTOM|FTENT_COLLIDEALL|FTENT_SPRANIMATE|FTENT_FADEOUT|FTENT_COLLIDEWORLD|FTENT_BODYTRACE);
+		model->flags = (FTENT_CLIENTCUSTOM|FTENT_PERSIST|FTENT_SPRANIMATE|FTENT_FADEOUT|FTENT_COLLIDEWORLD|FTENT_BODYTRACE);
 		model->frameMax = 255.0f;
 		model->entity.curstate.framerate = 1.0f;
 		model->entity.curstate.animtime = flAnimTime;

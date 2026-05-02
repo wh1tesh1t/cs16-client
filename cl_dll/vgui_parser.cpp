@@ -235,18 +235,14 @@ static void Localize_InitLanguage( const char *language )
 {
 	const char *gamedir = gEngfuncs.pfnGetGameDirectory();
 
-	// if gamedir isn't gameui, then load standard gameui strings
-	if( strcmp( gamedir, "gameui" ))
-		Localize_AddToDictionary( "gameui", language );
-
 	// if gamedir isn't valve, then load standard HL1 strings
 	if( strcmp( gamedir, "valve" ))
 		Localize_AddToDictionary( "valve",  language );
 
-	// if gamedir isn't mainui, then load standard mainui strings
-	if( strcmp( gamedir, "mainui" ))
-		Localize_AddToDictionary( "mainui", language );
-
+	// if gamedir is czero, also load cstrike strings
+	if ( strcmp( gamedir, "czero" ) == 0 )
+		Localize_AddToDictionary( "cstrike", language );
+	
 	// mod strings override default ones
 	Localize_AddToDictionary( gamedir,  language );
 }

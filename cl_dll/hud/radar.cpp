@@ -376,8 +376,7 @@ int CHudRadar::Draw(float flTime)
 		}
 	}
 
-	if( gHUD.GetGameType() == GAME_CZERO )
-		DrawPlayerLocation( ( m_hRadarOpaque.rect.Height() ) + 10 );
+	DrawPlayerLocation( ( m_hRadarOpaque.rect.Height() ) + 10 );
 
 	return 0;
 }
@@ -387,12 +386,21 @@ void CHudRadar::DrawPlayerLocation( int y )
 	const char *szLocation = g_PlayerExtraInfo[gHUD.m_Scoreboard.m_iPlayerNum].location;
 	if( szLocation[0] )
 	{
+		// Localize the location string
+		const char *szLocalizedLocation = Localize( szLocation );
+
+		// don't draw unlocalized location
+		if( szLocalizedLocation[0] == '#' )
+			return;
+
 		int x = (m_hRadarOpaque.rect.Width()) / 2;
-		int len = DrawUtils::ConsoleStringLen( szLocation );
+		int len = DrawUtils::ConsoleStringLen( szLocalizedLocation );
 
 		x = x - len / 2;
+		if( x < 0 ) x = 0;
 
-		DrawUtils::DrawConsoleString( x, y, szLocation );
+		DrawUtils::SetConsoleTextColor( g_ColorGreen[0], g_ColorGreen[1], g_ColorGreen[2] );
+		DrawUtils::DrawConsoleString( x, y, szLocalizedLocation );
 	}
 }
 

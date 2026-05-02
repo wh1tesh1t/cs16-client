@@ -36,6 +36,7 @@
 
 #include "csprite.h"
 #include "cvardef.h"
+#include "utlstring.h"
 
 #define MIN_ALPHA	 100	
 #define	HUDELEM_ACTIVE	1
@@ -90,7 +91,6 @@ inline bool BIsValidCTModelIndex( int i )
 
 #define MAX_PLAYER_NAME_LENGTH		32
 
-#define	MAX_MOTD_LENGTH				1536
 
 extern cvar_t *cl_fog_r;
 extern cvar_t *cl_fog_g;
@@ -338,7 +338,7 @@ public:
 
 protected:
 	static int MOTD_DISPLAY_TIME;
-	char m_szMOTD[ MAX_MOTD_LENGTH ];
+	CUtlString m_szMOTD;
 	
 	int m_iLines;
 	int m_iMaxLength;
@@ -388,6 +388,7 @@ private:
 	bool m_bDrawStroke;
 	cvar_t *cl_showpacketloss;
 	cvar_t *cl_showplayerversion;
+	cvar_t *cl_show_scoreboard_on_death;
 };
 
 //
@@ -631,6 +632,14 @@ struct message_parms_t
 	float fadeTime;
 };
 
+struct hud_message_t
+{
+	client_textmessage_t	*pMessage;
+	// unsigned int font;
+	char args[4][256]; // 1024 bytes
+	int arg_count;
+};
+
 //
 //-----------------------------------------------------
 //
@@ -665,8 +674,8 @@ public:
 	int	XPosition( float x, int width, int lineWidth );
 	int YPosition( float y, int height );
 
-	void MessageAdd( const char *pName, float time );
-	void MessageAdd(client_textmessage_t * newMessage );
+	void MessageAdd( const char *pName, float time, qboolean hintMessage = 0/*, unsigned int font = 0 */ );
+	void MessageAdd( client_textmessage_t *newMessage );
 	void MessageDrawScan( client_textmessage_t *pMessage, float time );
 	void MessageScanStart( void );
 	void MessageScanNextChar( void );
@@ -675,7 +684,7 @@ public:
 	client_textmessage_t *AllocMessage( const char *text = NULL, client_textmessage_t *copyFrom = NULL );
 
 private:
-	client_textmessage_t		*m_pMessages[maxHUDMessages];
+	hud_message_t				m_pMessages[maxHUDMessages];
 	float						m_startTime[maxHUDMessages];
 	message_parms_t				m_parms;
 	float						m_gameTitleTime;
@@ -918,6 +927,11 @@ private:
 		char m_szNameAndHealth[80];
 	} label;
 	int m_hTimerTexture;
+	int m_hChecked;
+	int m_hArrowDown;
+	int m_hArrowUp;
+	int m_hArrowLeft;
+	int m_hArrowRight;
 
 	enum {
 		ROOT_MENU = (1<<0),
